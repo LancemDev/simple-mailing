@@ -20,3 +20,5 @@ use App\Livewire\Login;
 
 Route::get('/', Login::class)->name('login');
 Route::get('/mail', Mail::class)->name('mail');
+
+// Route::get('/subscribe', )
