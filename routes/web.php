@@ -5,6 +5,8 @@ use Illuminate\Support\Facades\Route;
 use App\Livewire\Mail;
 use App\Livewire\Login;
 
+use App\Http\Controllers\SubscriptionController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -16,9 +18,7 @@ use App\Livewire\Login;
 |
 */
 
-// Route::get('/', Welcome::class);
-
-Route::get('/', Login::class)->name('login');
+Route::get('/login', Login::class)->name('login');
 Route::get('/mail', Mail::class)->name('mail');
 
-// Route::get('/subscribe', )
+Route::get('/subscribe/{email}', [SubscriptionController::class, 'index'])->name('subscribe');
