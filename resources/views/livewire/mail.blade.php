@@ -1,7 +1,7 @@
 <div>
     @php
-        $mails = \App\Models\Mail::all();
-
+        $mails = \App\Models\Mail::paginate(10); // Use paginate instead of all
+    
         $headers = [
             ['key' => 'id', 'label' => '#'],
             ['key' => 'created_at', 'label' => 'Sent At'],
@@ -10,10 +10,10 @@
             ['key' => 'actions', 'label' => ''],
         ];
     @endphp
-
-    <x-header title="mails" with-anchor separator />
+    
+    <x-header title="Mails" with-anchor separator />
     <x-button wire:click="create" icon="o-plus" class="btn btn-primary" label="Send new email" spinner />
-    <x-table :headers="$headers" :rows="$mails" striped>
+    <x-table :headers="$headers" :rows="$mails" striped with-pagination>
         @foreach($mails as $mail)
             @scope('actions', $mail)
             <div class="flex">

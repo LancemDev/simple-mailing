@@ -25,8 +25,8 @@
  
         {{-- Right side actions --}}
         <x-slot:actions>
-            <x-button label="Messages" icon="o-envelope" link="###" class="btn-ghost btn-sm" responsive />
-            <x-button label="Notifications" icon="o-bell" link="###" class="btn-ghost btn-sm" responsive />
+            <x-theme-toggle darkTheme="coffee" lightTheme="lemonade" />
+            <x-button label="Profile" icon="o-user" link="###" class="btn-ghost btn-sm" responsive />
         </x-slot:actions>
     </x-nav>
 
@@ -39,6 +39,8 @@
 
             {{-- MENU --}}
             <x-menu activate-by-route>
+                <x-menu-item label="Mails" icon="o-home" link="/admin/send-mail" />
+                <x-menu-item label="Recipients" icon="o-users" link="/admin/view-users" />
             </x-menu>
         </x-slot:sidebar>
 

@@ -4,6 +4,8 @@ use App\Livewire\Welcome;
 use Illuminate\Support\Facades\Route;
 use App\Livewire\Mail;
 use App\Livewire\Login;
+use App\Livewire\ViewUsers;
+use App\Http\Controllers\Auth\Login as LoginController;
 
 use App\Http\Controllers\SubscriptionController;
 
@@ -18,7 +20,12 @@ use App\Http\Controllers\SubscriptionController;
 |
 */
 
-Route::get('/login', Login::class)->name('login');
-Route::get('/mail', Mail::class)->name('mail');
+Route::get('/admin', function(){
+    return view('login');
+})->name('admin.login');
+Route::get('/admin/send-mail', Mail::class)->name('admin.send-mail');
+Route::get('/admin/view-users', ViewUsers::class)->name('admin.view-users');
 
-Route::get('/subscribe/{email}', [SubscriptionController::class, 'index'])->name('subscribe');
+Route::get('/recipient/subscribe/{email}', [SubscriptionController::class, 'index'])->name('subscribe');
+
+Route::post('/admin/login', [LoginController::class, 'login'])->name('admin.login');

@@ -8,10 +8,11 @@ use App\Models\Recipient;
 use Illuminate\Support\Facades\Mail as Mailer;
 use App\Mail\MassMail;
 use Illuminate\Support\Collection;
+use Livewire\WithPagination;
 
 class Mail extends Component
 {
-    use Toast;
+    use Toast, WithPagination;
 
     public $content;
     public $subject;
