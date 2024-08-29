@@ -1,10 +1,14 @@
 <div>
     @php 
-        $users = \App\Models\Recipient::paginate(10); // Use paginate instead of all
+        $users = \App\Models\Contact::paginate(10); // Use paginate instead of all
         $headers = [
             ['key' => 'id', 'label' => '#'],
-            ['key' => 'name', 'label' => 'Name'],
-            ['key' => 'email', 'label' => 'Email'],
+            ['key' => 'name', 'label' => 'name'],
+            ['key' => 'position', 'label' => 'Position'],
+            ['key' => 'company', 'label' => 'Company'],
+            ['key' => 'phone_number', 'label' => 'Phone Number'],
+            ['key' => 'email', 'label' => 'E-mail Address'],
+            ['key' => 'status', 'label' => 'Status'],
             ['key' => 'actions', 'label' => ''],
         ];
     @endphp

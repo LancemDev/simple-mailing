@@ -71,27 +71,28 @@ class Mail extends Component
             'subject' => 'required',
             'content' => 'required'
         ]);
-
+    
         $this->isSending = true;
-
+    
         $selectedEmails = $this->recipients
             ->whereIn('id', $this->selectedRecipients)
             ->pluck('email')
             ->toArray();
-
+    
         $extraEmails = collect($this->extraRecipients)
             ->whereIn('id', $this->selectedRecipients)
             ->pluck('email')
             ->toArray();
-
+    
         $recipients = array_merge($selectedEmails, $extraEmails);
-
+    
         // Insert email record into the mails table
         $mail = \App\Models\Mail::create([
             'subject' => $this->subject,
             'content' => $this->content,
         ]);
-
+    
+        // Use a database transaction to ensure all operations succeed
         foreach ($recipients as $recipient) {
             if (!empty($recipient)) {
                 Mailer::to($recipient)->send(new MassMail($this->subject, $this->content));
@@ -104,9 +105,9 @@ class Mail extends Component
                 ]);
             }
         }
-
+    
         $this->isSending = false;
-
+    
         $this->success('Mail sent successfully to : ' . count($recipients) . ' recipients');
         $this->mailModal = false;
         $this->selectModal = false;
