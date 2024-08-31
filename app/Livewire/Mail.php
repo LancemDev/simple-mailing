@@ -4,7 +4,7 @@ namespace App\Livewire;
 
 use Livewire\Component;
 use Mary\Traits\Toast;
-use App\Models\Recipient;
+use App\Models\Contact as Recipient;
 use Illuminate\Support\Facades\Mail as Mailer;
 use App\Mail\MassMail;
 use Illuminate\Support\Collection;
@@ -45,9 +45,9 @@ class Mail extends Component
 
     public function openSelectModal()
     {
-        $this->recipients = Recipient::all();
+        $this->recipients = Recipient::where('email', 'LIKE', '%@%')->get();
         $this->selectModal = true;
-    }
+    }    
 
     public function addRecipient()
     {
@@ -93,18 +93,18 @@ class Mail extends Component
         ]);
     
         // Use a database transaction to ensure all operations succeed
-        foreach ($recipients as $recipient) {
-            if (!empty($recipient)) {
-                Mailer::to($recipient)->send(new MassMail($this->subject, $this->content));
+        // foreach ($recipients as $recipient) {
+        //     if (!empty($recipient)) {
+        //         Mailer::to($recipient)->send(new MassMail($this->subject, $this->content));
 
-                // Insert recipient record into the mail_recipients table
-                \App\Models\MailRecipient::create([
-                    'mail_id' => $mail->id,
-                    'email' => $recipient,
-                    'recipient_id' => Recipient::where('email', $recipient)->first()->id
-                ]);
-            }
-        }
+        //         // Insert recipient record into the mail_recipients table
+        //         \App\Models\MailRecipient::create([
+        //             'mail_id' => $mail->id,
+        //             'email' => $recipient,
+        //             'recipient_id' => Recipient::where('email', $recipient)->first()->id
+        //         ]);
+        //     }
+        // }
     
         $this->isSending = false;
     

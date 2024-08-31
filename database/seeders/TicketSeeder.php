@@ -13,82 +13,115 @@ class TicketSeeder extends Seeder
      */
     public function run(): void
     {
-        $file = fopen(database_path('seeders/participants.csv'), 'r');
+        $filePath = database_path('seeders/participants.csv');
+        if (!file_exists($filePath)) {
+            Log::error("CSV file not found: $filePath");
+            return;
+        }
+
+        $file = fopen($filePath, 'r');
+        if ($file === false) {
+            Log::error("Failed to open CSV file: $filePath");
+            return;
+        }
 
         // Skip the header row
         $header = fgetcsv($file);
-
-        $tickets = [];
-
-        while (($data = fgetcsv($file)) !== FALSE) {
-            // Ensure the row has the expected number of columns
-            if (count($data) >= 58) {
-                $tickets[] = [
-                    'type' => $data[1],
-                    'participant_last_name' => $data[2],
-                    'participant_first_name' => $data[3],
-                    'category' => $data[4],
-                    'subcategory' => $data[5],
-                    'price' => $data[6],
-                    'barcode' => $data[7],
-                    'composed' => $data[8],
-                    'order_date' => $data[9],
-                    'order_time' => $data[10],
-                    'payment_date' => $data[11],
-                    'payment_time' => $data[12],
-                    'order_number' => $data[13],
-                    'advanced_order_number' => $data[14],
-                    'ticket_number' => $data[15],
-                    'currency' => $data[16],
-                    'deleted' => $data[17],
-                    'source' => $data[18],
-                    'public_price' => $data[19],
-                    'total_fees' => $data[20],
-                    'discount_code' => $data[21],
-                    'discount' => $data[22],
-                    'total_price_paid_incl_tax' => $data[23],
-                    'commission' => $data[24],
-                    'total_price_without_commission_incl_tax' => $data[25],
-                    'price_paid_excl_tax' => $data[26],
-                    'tax_rate' => $data[27],
-                    'tax_for_tax_declarations' => $data[28],
-                    'counter' => $data[29],
-                    'counter_seller' => $data[30],
-                    'counter_payment' => $data[31],
-                    'counter_printing' => $data[32],
-                    'counter_operator' => $data[33],
-                    'buyer_last_name' => $data[34],
-                    'buyer_first_name' => $data[35],
-                    'buyer_email' => $data[36],
-                    'ticket_status' => $data[37],
-                    'refund_request_date_and_time' => $data[38],
-                    'ticket_deletion_date_and_time' => $data[39],
-                    'refund_request_source' => $data[40],
-                    'refund_request_amount' => $data[41],
-                    'buyer_mobile' => $data[42],
-                    'buyer_country' => $data[43],
-                    'buyer_company' => $data[44],
-                    'buyer_job_title' => $data[45],
-                    'participant_email' => $data[46],
-                    'marketing_source' => $data[47],
-                    'comments' => $data[48],
-                    'invoice_company' => $data[49],
-                    'invoice_vat_number' => $data[50],
-                    'invoice_address' => $data[51],
-                    'invoice_postal_code' => $data[52],
-                    'invoice_city' => $data[53],
-                    'invoice_province' => $data[54],
-                    'invoice_country' => $data[55],
-                    'additional_information' => $data[56],
-                    'buyer_language' => $data[57],
-                ];
-            } else {
-                // Log or handle any row that has issues
-                Log::warning('Row skipped due to insufficient columns: ' . json_encode($data));
-            }
+        if ($header === false) {
+            Log::error("Failed to read header row from CSV file: $filePath");
+            fclose($file);
+            return;
         }
 
-        // Insert the tickets into the database
-        DB::table('tickets')->insert($tickets);
+        $tickets = [];
+        $rowCount = 0;
+        $emails = [];
+
+        while (($data = fgetcsv($file)) !== FALSE) {
+            $rowCount++;
+            // Ensure the row has the expected number of columns
+            if (count($data) < 58) {
+                // Fill missing columns with default values
+                $data = array_pad($data, 58, null);
+            }
+
+            $email = $data[45];
+            if (in_array($email, $emails)) {
+                Log::warning("Duplicate email found and skipped: $email");
+                continue;
+            }
+
+            $emails[] = $email;
+
+            $tickets[] = [
+                'type' => $data[0],
+                'participant_last_name' => $data[1],
+                'participant_first_name' => $data[2],
+                'category' => $data[3],
+                'subcategory' => $data[4],
+                'price' => $data[5],
+                'barcode' => $data[6],
+                'composed' => $data[7],
+                'order_date' => $data[8],
+                'order_time' => $data[9],
+                'payment_date' => $data[10],
+                'payment_time' => $data[11],
+                'order_number' => $data[12],
+                'advanced_order_number' => $data[13],
+                'ticket_number' => $data[14],
+                'currency' => $data[15],
+                'deleted' => $data[16],
+                'source' => $data[17],
+                'public_price' => $data[18],
+                'total_fees' => $data[19],
+                'discount_code' => $data[20],
+                'discount' => $data[21],
+                'total_price_paid_incl_tax' => $data[22],
+                'commission' => $data[23],
+                'total_price_without_commission_incl_tax' => $data[24],
+                'price_paid_excl_tax' => $data[25],
+                'tax_rate' => $data[26],
+                'tax_for_tax_declarations' => $data[27],
+                'counter' => $data[28],
+                'counter_seller' => $data[29],
+                'counter_payment' => $data[30],
+                'counter_printing' => $data[31],
+                'counter_operator' => $data[32],
+                'buyer_last_name' => $data[33],
+                'buyer_first_name' => $data[34],
+                'buyer_email' => $data[35],
+                'ticket_status' => $data[36],
+                'refund_request_date_and_time' => $data[37],
+                'ticket_deletion_date_and_time' => $data[38],
+                'refund_request_source' => $data[39],
+                'refund_request_amount' => $data[40],
+                'buyer_mobile' => $data[41],
+                'buyer_country' => $data[42],
+                'buyer_company' => $data[43],
+                'buyer_job_title' => $data[44],
+                'participant_email' => $data[45],
+                'marketing_source' => $data[46],
+                'comments' => $data[47],
+                'invoice_company' => $data[48],
+                'invoice_vat_number' => $data[49],
+                'invoice_address' => $data[50],
+                'invoice_postal_code' => $data[51],
+                'invoice_city' => $data[52],
+                'invoice_province' => $data[53],
+                'invoice_country' => $data[54],
+                'additional_information' => $data[55],
+                'buyer_language' => $data[56],
+            ];
+        }
+
+        fclose($file);
+
+        if (empty($tickets)) {
+            Log::warning("No valid rows found in CSV file: $filePath");
+        } else {
+            // Insert the tickets into the database
+            DB::table('tickets')->insert($tickets);
+            Log::info("Inserted $rowCount rows into the tickets table.");
+        }
     }
 }

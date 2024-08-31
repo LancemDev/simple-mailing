@@ -3,7 +3,7 @@
         $users = \App\Models\Contact::paginate(10); // Use paginate instead of all
         $headers = [
             ['key' => 'id', 'label' => '#'],
-            ['key' => 'name', 'label' => 'name'],
+            ['key' => 'name', 'label' => 'Name'],
             ['key' => 'position', 'label' => 'Position'],
             ['key' => 'company', 'label' => 'Company'],
             ['key' => 'phone_number', 'label' => 'Phone Number'],
@@ -28,10 +28,14 @@
         </x-slot:empty>
     </x-table>
 
-    <x-modal wire:model="createModal">
+    <x-modal wire:model="createModal" title="Create Recipient">
         <x-form wire:submit="store">
-            <x-input inline label="Name" hint="The name of the recipient" icon="o-user" wire:model="name" />
-            <x-input inline label="Email" hint="The email of the recipient" icon="o-users" wire:model="email" />
+            <x-input inline label="Name" hint="The name of the recipient" icon="o-user" wire:model="name" error-field="name_error" />
+            <x-input inline label="Position" hint="The position of the recipient" icon="o-user-circle" wire:model="position" error-field="position_error" />
+            <x-input inline label="Company" hint="The company of the recipient" icon="o-building-office-2" wire:model="company" error-field="company_error" />
+            <x-input inline label="Phone Number" hint="The phone number of the recipient" icon="o-phone" wire:model="phone_number" error-field="phone_number_error" />
+            <x-input inline label="Email" hint="The email of the recipient" icon="o-envelope-open" wire:model="email" error-field="email_error" />
+            <x-input inline label="Status" hint="The status of the recipient" icon="o-users" wire:model="status" error-field="status_error" />
             <x-slot:actions>
                 <x-button label="Save" type="submit" class="btn-success" wire:loading.attr="disabled" />
                 <x-button label="Cancel" wire:click="closeModal" class="btn-danger" />
@@ -39,10 +43,14 @@
         </x-form>
     </x-modal>
 
-    <x-modal wire:model="updateModal">
+    <x-modal wire:model="updateModal" title="Update Recipient">
         <x-form wire:submit="updateDetails">
-            <x-input inline label="Name" hint="The name of the recipient" icon="o-user" wire:model="name" />
-            <x-input inline label="Email" hint="The email of the recipient" icon="o-users" wire:model="email" />
+            <x-input inline label="Name" hint="The name of the recipient" icon="o-user" wire:model="name" error-field="name_error" />
+            <x-input inline label="Position" hint="The position of the recipient" icon="o-user-circle" wire:model="position" error-field="position_error" />
+            <x-input inline label="Company" hint="The company of the recipient" icon="o-building-office-2" wire:model="company" error-field="company_error" />
+            <x-input inline label="Phone Number" hint="The phone number of the recipient" icon="o-phone" wire:model="phone_number" error-field="phone_number_error" />
+            <x-input inline label="Email" hint="The email of the recipient" icon="o-envelope-open" wire:model="email" error-field="email_error" />
+            <x-input inline label="Status" hint="The status of the recipient" icon="o-users" wire:model="status" error-field="status_error" />
             <x-slot:actions>
                 <x-button label="Save" type="submit" class="btn-success" wire:loading.attr="disabled" />
                 <x-button label="Cancel" wire:click="closeModal" class="btn-danger" />

@@ -10,10 +10,11 @@ use App\Models\Recipient;
 class ViewUsers extends Component
 {
     use WithPagination, Toast;
-    public $name, $email;
+    public $name, $email, $position, $company, $phone_number, $status;
 
     // public int $perPage = 3;
     public bool $createModal = false;
+    public bool $updateModal = false;
 
     public function create(){
         $this->createModal = true;
@@ -21,6 +22,7 @@ class ViewUsers extends Component
 
     public function closeModal(){
         $this->createModal = false;
+        $this->updateModal = false;
     }
 
     public function store(){
@@ -43,7 +45,11 @@ class ViewUsers extends Component
         $recipient = Recipient::find($id);
         $this->name = $recipient->first_name;
         $this->email = $recipient->email;
-        $this->createModal = true;
+        $this->position = $recipient->position;
+        $this->company = $recipient->company;
+        $this->phone_number = $recipient->phone_number;
+        $this->status = $recipient->status;
+        $this->updateModal = true;
     }
 
     public function delete($id){

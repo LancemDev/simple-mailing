@@ -7,7 +7,7 @@
     <title>{{ isset($title) ? $title.' - '.config('app.name') : config('app.name') }}</title>
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
-    {{-- <script src="https://cdn.tiny.cloud/1/YOUR-KEY-HERE/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script> --}}
+    {{-- <script src="https://cdn.tiny.cloud/1/5dwmodcaem7stuwklsjlhhft689r2bu38okypqadx44tcald/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script> --}}
 </head>
 <body class="min-h-screen font-sans antialiased bg-base-200/50 dark:bg-base-200">
 
@@ -41,6 +41,7 @@
             <x-menu activate-by-route>
                 <x-menu-item label="Mails" icon="o-home" link="/admin/send-mail" />
                 <x-menu-item label="Recipients" icon="o-users" link="/admin/view-users" />
+                <x-menu-item label="Tickets" icon="o-ticket" link="/admin/view-tickets" />
             </x-menu>
         </x-slot:sidebar>
 

@@ -38,6 +38,7 @@
                 rows="5"
                 inline
             />
+            {{-- <x-editor wire:model="content" label="Content" hint="The full product description" /> --}}
             <x-slot:actions>
                 <x-button label="Next" type="submit" class="btn-success" wire:loading.attr="disabled" />
                 <x-button label="Cancel" wire:click="closeModal" class="btn-danger" />
