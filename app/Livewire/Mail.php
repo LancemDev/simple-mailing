@@ -3,16 +3,16 @@
 namespace App\Livewire;
 
 use Livewire\Component;
-use Mary\Traits\Toast;
-use App\Models\Contact as Recipient;
+use App\Models\Contact as Recipients;
+use App\Models\Mail as MailModel;
 use Illuminate\Support\Facades\Mail as Mailer;
 use App\Mail\MassMail;
-use Illuminate\Support\Collection;
-use Livewire\WithPagination;
+use Mary\Traits\Toast;
+use Livewire\WithFileUploads;
 
 class Mail extends Component
 {
-    use Toast, WithPagination;
+    use Toast, WithFileUploads;
 
     public $content;
     public $subject;
@@ -23,10 +23,15 @@ class Mail extends Component
     public $selectedRecipients = [];
     public $extraRecipients = [];
     public $newRecipient = '';
+    public $selectedCompany = null;
+    public $companies;
+    public $text;
+    public $content2;
 
     public function mount()
     {
         $this->recipients = collect();
+        $this->companies = Recipients::select('company')->distinct()->get()->pluck('company');
     }
 
     public function create()
@@ -45,7 +50,7 @@ class Mail extends Component
 
     public function openSelectModal()
     {
-        $this->recipients = Recipient::where('email', 'LIKE', '%@%')->get();
+        $this->recipients = Recipients::where('email', 'LIKE', '%@%')->get();
         $this->selectModal = true;
     }    
 
@@ -60,7 +65,7 @@ class Mail extends Component
     public function view($id)
     {
         $this->mailModal = true;
-        $mail = \App\Models\Mail::find($id);
+        $mail = MailModel::find($id);
         $this->subject = $mail->subject;
         $this->content = $mail->content;
     }
@@ -87,24 +92,17 @@ class Mail extends Component
         $recipients = array_merge($selectedEmails, $extraEmails);
     
         // Insert email record into the mails table
-        $mail = \App\Models\Mail::create([
+        $mail = MailModel::create([
             'subject' => $this->subject,
             'content' => $this->content,
         ]);
     
-        // Use a database transaction to ensure all operations succeed
-        // foreach ($recipients as $recipient) {
-        //     if (!empty($recipient)) {
-        //         Mailer::to($recipient)->send(new MassMail($this->subject, $this->content));
-
-        //         // Insert recipient record into the mail_recipients table
-        //         \App\Models\MailRecipient::create([
-        //             'mail_id' => $mail->id,
-        //             'email' => $recipient,
-        //             'recipient_id' => Recipient::where('email', $recipient)->first()->id
-        //         ]);
-        //     }
-        // }
+        // Send emails to recipients
+        foreach ($recipients as $recipient) {
+            if (!empty($recipient)) {
+                Mailer::to($recipient)->send(new MassMail($this->subject, $this->content));
+            }
+        }
     
         $this->isSending = false;
     
@@ -115,8 +113,14 @@ class Mail extends Component
 
     public function render()
     {
+        $filteredRecipients = $this->selectedCompany 
+            ? Recipients::where('company', $this->selectedCompany)->get() 
+            : Recipients::all();
+
         return view('livewire.mail', [
-            'allRecipients' => $this->recipients->merge(collect($this->extraRecipients))->toArray()
+            'mails' => MailModel::orderBy('id', 'asc')->get(),
+            'allRecipients' => $filteredRecipients->merge(collect($this->extraRecipients))->toArray(),
+            'companies' => $this->companies
         ]);
     }
 }

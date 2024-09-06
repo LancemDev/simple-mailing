@@ -7,7 +7,11 @@
     <title>{{ isset($title) ? $title.' - '.config('app.name') : config('app.name') }}</title>
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
-    {{-- <script src="https://cdn.tiny.cloud/1/5dwmodcaem7stuwklsjlhhft689r2bu38okypqadx44tcald/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script> --}}
+    <script src="https://cdn.tiny.cloud/1/5dwmodcaem7stuwklsjlhhft689r2bu38okypqadx44tcald/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+    
+    {{-- EasyMDE --}}
+    <link rel="stylesheet" href="https://unpkg.com/easymde/dist/easymde.min.css">
+    <script src="https://unpkg.com/easymde/dist/easymde.min.js"></script>
 </head>
 <body class="min-h-screen font-sans antialiased bg-base-200/50 dark:bg-base-200">
 
@@ -26,7 +30,7 @@
         {{-- Right side actions --}}
         <x-slot:actions>
             <x-theme-toggle darkTheme="coffee" lightTheme="lemonade" />
-            <x-button label="Profile" icon="o-user" link="###" class="btn-ghost btn-sm" responsive />
+            <x-button label="Logout" icon="o-arrow-left-start-on-rectangle" link="/logout" class="btn-ghost btn-sm" responsive />
         </x-slot:actions>
     </x-nav>
 
@@ -40,8 +44,7 @@
             {{-- MENU --}}
             <x-menu activate-by-route>
                 <x-menu-item label="Mails" icon="o-home" link="/admin/send-mail" />
-                <x-menu-item label="Recipients" icon="o-users" link="/admin/view-users" />
-                <x-menu-item label="Tickets" icon="o-ticket" link="/admin/view-tickets" />
+                <x-menu-item label="Recipients" icon="o-users" link="/admin/view-recipients" />
             </x-menu>
         </x-slot:sidebar>
 

@@ -3,8 +3,8 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
-use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Support\Facades\Log;
+use App\Models\Contact;
 
 class NewRecipientsSeeder extends Seeder
 {
@@ -13,26 +13,59 @@ class NewRecipientsSeeder extends Seeder
      */
     public function run(): void
     {
-        $filePath = database_path('seeders/new_recipients.xlsx');
-        $rows = Excel::toArray([], $filePath)[0];
+        $filePath = database_path('seeders/new_recipients.csv');
+        if (!file_exists($filePath)) {
+            Log::error("CSV file not found: $filePath");
+            return;
+        }
+
+        $file = fopen($filePath, 'r');
+        if ($file === false) {
+            Log::error("Failed to open CSV file: $filePath");
+            return;
+        }
 
         // Skip the header row
-        array_shift($rows);
+        fgetcsv($file);
 
         $recipients = [];
+        $emails = [];
 
-        foreach ($rows as $row) {
+        while (($data = fgetcsv($file)) !== FALSE) {
+            // Ensure the row has the expected number of columns
+            if (count($data) < 7) {
+                // Fill missing columns with default values
+                $data = array_pad($data, 7, null);
+            }
+
+            $email = $data[6];
+
+            // Check for duplicate email
+            if (in_array($email, $emails)) {
+                Log::warning("Duplicate email found and skipped: $email");
+                continue;
+            }
+
+            $emails[] = $email;
+
             $recipients[] = [
-                'first_name'    => $row[0],
-                'last_name'     => $row[1],
-                'company'       => $row[2],
-                'role'          => $row[3],
-                'mobile_number' => $row[4],
-                'email'         => $row[5],
+                'name'          => $data[1] . ' ' . $data[2], // Combine first name and last name
+                'company'       => $data[4],
+                'position'      => $data[3],
+                'phone_number'  => $data[5],
+                'email'         => $data[6],
+                'status'        => 'new' // Assuming a default status for new recipients
             ];
         }
 
-        // Insert the data into the database
-        DB::table('new_recipients')->insert($recipients);
+        fclose($file);
+
+        if (empty($recipients)) {
+            Log::warning("No valid rows found in CSV file: $filePath");
+        } else {
+            // Insert the recipients into the contacts table using the Contact model
+            Contact::insert($recipients);
+            Log::info("Inserted " . count($recipients) . " rows into the contacts table.");
+        }
     }
 }

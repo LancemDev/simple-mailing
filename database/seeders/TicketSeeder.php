@@ -11,6 +11,7 @@ class TicketSeeder extends Seeder
     /**
      * Run the database seeds.
      */
+    
     public function run(): void
     {
         $filePath = database_path('seeders/participants.csv');

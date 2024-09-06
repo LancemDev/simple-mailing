@@ -31,10 +31,23 @@ Route::get('/login', function(){
 
 Route::middleware('auth:web')->group(function(){
     Route::get('/admin/send-mail', Mail::class)->name('admin.send-mail');
-    Route::get('/admin/view-users', ViewUsers::class)->name('admin.view-users');
-    Route::get('/admin/view-tickets', ViewTickets::class)->name('admin.view-tickets');
+    Route::get('/admin/view-recipients', ViewUsers::class)->name('admin.view-recipients');
+    Route::get('/admin/view-new-recipients', ViewTickets::class)->name('admin.view-new-recipients');
 });
 
 Route::get('/recipient/subscribe/{email}', [SubscriptionController::class, 'index'])->name('subscribe');
 
 Route::post('/admin/login', [LoginController::class, 'login'])->name('admin.login');
+
+
+Route::get('/logout', function () {
+    $guards = array_keys(config('auth.guards'));
+
+    foreach ($guards as $guard) {
+        if (auth()->guard($guard)->check()) {
+            auth()->guard($guard)->logout();
+        }
+    }
+
+    return redirect('/admin')->with('success', 'Logout successful');
+})->name('logout');

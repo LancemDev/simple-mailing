@@ -8,7 +8,6 @@
             ['key' => 'company', 'label' => 'Company'],
             ['key' => 'phone_number', 'label' => 'Phone Number'],
             ['key' => 'email', 'label' => 'E-mail Address'],
-            ['key' => 'status', 'label' => 'Status'],
             ['key' => 'actions', 'label' => ''],
         ];
     @endphp

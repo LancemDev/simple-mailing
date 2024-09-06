@@ -5,7 +5,7 @@ namespace App\Livewire;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Mary\Traits\Toast;
-use App\Models\Recipient;
+use App\Models\Contact;
 
 class ViewUsers extends Component
 {
@@ -26,14 +26,13 @@ class ViewUsers extends Component
     }
 
     public function store(){
-        $this->validate([
-            'name' => 'required',
-            'email' => 'required|email',
-        ]);
-
-        Recipient::create([
-            'first_name' => $this->name,
+        Contact::create([
+            'name' => $this->name,
             'email' => $this->email,
+            'position' => $this->position,
+            'company' => $this->company,
+            'phone_number' => $this->phone_number,
+            'status' => $this->status,
         ]);
 
         $this->closeModal();
@@ -42,8 +41,8 @@ class ViewUsers extends Component
     }
 
     public function update($id){
-        $recipient = Recipient::find($id);
-        $this->name = $recipient->first_name;
+        $recipient = Contact::find($id);
+        $this->name = $recipient->name;
         $this->email = $recipient->email;
         $this->position = $recipient->position;
         $this->company = $recipient->company;
@@ -53,7 +52,7 @@ class ViewUsers extends Component
     }
 
     public function delete($id){
-        Recipient::destroy($id);
+        Contact::destroy($id);
         $this->success('Recipient deleted successfully');
     }
 
@@ -63,8 +62,8 @@ class ViewUsers extends Component
             'email' => 'required|email',
         ]);
 
-        Recipient::find($id)->update([
-            'first_name' => $this->name,
+        Contact::find($id)->update([
+            'name' => $this->name,
             'email' => $this->email,
         ]);
 
