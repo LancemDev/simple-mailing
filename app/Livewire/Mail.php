@@ -7,13 +7,14 @@ use App\Models\Contact as Recipients;
 use App\Models\Mail as MailModel;
 use Illuminate\Support\Facades\Mail as Mailer;
 use App\Mail\MassMail;
-use Mary\Traits\Toast;
+use League\CommonMark\CommonMarkConverter;
 use Livewire\WithFileUploads;
+use Mary\Traits\Toast;
 
 class Mail extends Component
 {
-    use Toast, WithFileUploads;
-
+    use WithFileUploads, Toast;
+    
     public $content;
     public $subject;
     public $mailModal = false;
@@ -25,8 +26,6 @@ class Mail extends Component
     public $newRecipient = '';
     public $selectedCompany = null;
     public $companies;
-    public $text;
-    public $content2;
 
     public function mount()
     {
@@ -91,6 +90,10 @@ class Mail extends Component
     
         $recipients = array_merge($selectedEmails, $extraEmails);
     
+        // Convert markdown content to HTML
+        $converter = new CommonMarkConverter();
+        $htmlContent = $converter->convertToHtml($this->content);
+    
         // Insert email record into the mails table
         $mail = MailModel::create([
             'subject' => $this->subject,
@@ -100,7 +103,7 @@ class Mail extends Component
         // Send emails to recipients
         foreach ($recipients as $recipient) {
             if (!empty($recipient)) {
-                Mailer::to($recipient)->send(new MassMail($this->subject, $this->content));
+                Mailer::to($recipient)->send(new MassMail($this->subject, $htmlContent));
             }
         }
     

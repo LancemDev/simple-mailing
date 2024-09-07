@@ -15,15 +15,15 @@ class MassMail extends Mailable
     use Queueable, SerializesModels;
 
     public $subject;
-    public $content;
+    public $htmlContent;
 
     /**
      * Create a new message instance.
      */
-    public function __construct($subject, $content)
+    public function __construct($subject, $htmlContent)
     {
         $this->subject = $subject;
-        $this->content = $content;
+        $this->htmlContent = $htmlContent;
     }
 
     /**
@@ -44,6 +44,7 @@ class MassMail extends Mailable
     {
         return new Content(
             view: 'mail.group',
+            with: ['htmlContent' => $this->htmlContent],
         );
     }
 

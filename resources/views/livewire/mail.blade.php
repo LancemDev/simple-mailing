@@ -30,10 +30,7 @@
     <x-modal wire:model="mailModal">
         <x-form wire:submit.prevent="openSelectModal">
             <x-input inline label="Subject" hint="The Subject of your email" icon="o-user" wire:model="subject" />
-
             <x-markdown wire:model="content" label="Email Content" icon="o-envelope" inline />
-
-            {{-- <x-editor wire:model="content" label="Content" hint="The full product description" /> --}}
             <x-slot:actions>
                 <x-button label="Next" type="submit" class="btn-success" wire:loading.attr="disabled" />
                 <x-button label="Cancel" wire:click="closeModal" class="btn-danger" />
