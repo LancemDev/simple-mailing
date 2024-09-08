@@ -23,7 +23,7 @@
                     </div>
                     <div class="divide-y divide-gray-200">
                         <div class="py-8 text-base leading-6 space-y-4 text-gray-700 sm:text-lg sm:leading-7">
-                            <form method="POST" action="{{ route('admin.login') }}">
+                            <form method="POST" action="{{ route('admin.login.submit') }}">
                                 @csrf
                                 <div class="relative">
                                     <input autocomplete="off" id="email" name="email" type="text" class="peer placeholder-transparent h-10 w-full border-2 border-black rounded bg-white text-gray-700 focus:outline-none focus:border-gray-600" placeholder="Email address" />

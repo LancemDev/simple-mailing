@@ -1,13 +1,10 @@
 <?php
 
-use App\Livewire\Welcome;
 use Illuminate\Support\Facades\Route;
 use App\Livewire\Mail;
-use App\Livewire\Login;
 use App\Livewire\ViewUsers;
 use App\Livewire\ViewTickets;
 use App\Http\Controllers\Auth\Login as LoginController;
-
 use App\Http\Controllers\SubscriptionController;
 
 /*
@@ -21,25 +18,24 @@ use App\Http\Controllers\SubscriptionController;
 |
 */
 
-Route::get('/admin', function(){
+Route::get('/', function () {
     return view('login');
-})->name('admin.login');
+})->name('login.form');
 
-Route::get('/login', function(){
-    return view('login');
-})->name('login');
-
-Route::middleware('auth:web')->group(function(){
-    Route::get('/admin/send-mail', Mail::class)->name('admin.send-mail');
-    Route::get('/admin/view-recipients', ViewUsers::class)->name('admin.view-recipients');
-    Route::get('/admin/view-new-recipients', ViewTickets::class)->name('admin.view-new-recipients');
+// Admin routes
+Route::middleware('auth:web')->group(function () {
+    Route::get('/admin/send-mail', Mail::class)->name('admin.mail.send');
+    Route::get('/admin/view-recipients', ViewUsers::class)->name('admin.recipients.view');
+    Route::get('/admin/view-new-recipients', ViewTickets::class)->name('admin.recipients.new');
 });
 
-Route::get('/recipient/subscribe/{email}', [SubscriptionController::class, 'index'])->name('subscribe');
+// Subscription route
+Route::get('/recipient/subscribe/{email}', [SubscriptionController::class, 'index'])->name('recipient.subscribe');
 
-Route::post('/admin/login', [LoginController::class, 'login'])->name('admin.login');
+// Login route
+Route::post('/admin/login', [LoginController::class, 'login'])->name('admin.login.submit');
 
-
+// Logout route
 Route::get('/logout', function () {
     $guards = array_keys(config('auth.guards'));
 
@@ -49,5 +45,5 @@ Route::get('/logout', function () {
         }
     }
 
-    return redirect('/admin')->with('success', 'Logout successful');
+    return redirect('/')->with('success', 'Logout successful');
 })->name('logout');
