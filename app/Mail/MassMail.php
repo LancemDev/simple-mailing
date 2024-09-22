@@ -10,7 +10,7 @@ use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Mail\Mailables\Address;
 
-class MassMail extends Mailable
+class MassMail extends Mailable implements ShouldQueue
 {
     use Queueable, SerializesModels;
 
@@ -32,7 +32,7 @@ class MassMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            from: new Address('contact@kfbc.fr', 'Kenya France Business Club'),
+            from: new Address('contact@mailing.fr', 'Mailing Admin'),
             subject: $this->subject,
         );
     }

@@ -1,6 +1,5 @@
 <div>
     @php 
-        $users = \App\Models\Contact::paginate(10); // Use paginate instead of all
         $headers = [
             ['key' => 'id', 'label' => '#'],
             ['key' => 'name', 'label' => 'Name'],
@@ -10,6 +9,9 @@
             ['key' => 'email', 'label' => 'E-mail Address'],
             ['key' => 'actions', 'label' => ''],
         ];
+
+        $users = $this->getUsers();
+        
     @endphp
     <x-header title="Recipients" with-anchor separator />
     <x-button wire:click="create" icon="o-plus" class="btn btn-primary" label="Add new recipient" spinner />

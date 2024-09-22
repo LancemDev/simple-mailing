@@ -5,7 +5,7 @@ namespace App\Livewire;
 use Livewire\Component;
 use App\Models\Contact as Recipients;
 use App\Models\Mail as MailModel;
-use Illuminate\Support\Facades\Mail as Mailer;
+use Illuminate\Support\Facades\Mail as MailFacade; // Alias the Mail facade
 use App\Mail\MassMail;
 use League\CommonMark\CommonMarkConverter;
 use Livewire\WithFileUploads;
@@ -100,10 +100,10 @@ class Mail extends Component
             'content' => $this->content,
         ]);
     
-        // Send emails to recipients
+        // Queue emails to recipients
         foreach ($recipients as $recipient) {
             if (!empty($recipient)) {
-                Mailer::to($recipient)->send(new MassMail($this->subject, $htmlContent));
+                MailFacade::to($recipient)->queue(new MassMail($this->subject, $htmlContent));
             }
         }
     

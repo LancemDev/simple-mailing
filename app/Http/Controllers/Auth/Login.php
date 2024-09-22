@@ -14,7 +14,8 @@ class Login extends Controller
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
 
-            return redirect()->intended('/admin/send-mail');
+            // Directly redirect to the /admin/send-mail route
+            return redirect('/admin/send-mail');
         }
 
         return back()->withErrors([

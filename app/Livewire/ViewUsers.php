@@ -6,10 +6,12 @@ use Livewire\Component;
 use Livewire\WithPagination;
 use Mary\Traits\Toast;
 use App\Models\Contact;
+use Livewire\Attributes\Computed;
 
 class ViewUsers extends Component
 {
     use WithPagination, Toast;
+    public $users;
     public $name, $email, $position, $company, $phone_number, $status;
 
     // public int $perPage = 3;
@@ -70,10 +72,18 @@ class ViewUsers extends Component
         $this->closeModal();
         $this->success('Recipient updated successfully');
         $this->reset();
-    } 
+    }
+
+    #[Computed]
+    public function getUsers()
+    {
+        return Contact::paginate(10);
+    }
 
     public function render()
     {
-        return view('livewire.view-users');
+        return view(
+            'livewire.view-users'
+        );
     }
 }

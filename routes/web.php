@@ -18,22 +18,23 @@ use App\Http\Controllers\SubscriptionController;
 |
 */
 
-Route::get('/', function () {
+// Display the login form
+Route::get('/login', function () {
     return view('login');
-})->name('login.form');
+})->name('login');
+
+// Handle login form submission
+Route::post('/admin/login', [LoginController::class, 'login'])->name('admin.login.submit');
 
 // Admin routes
 Route::middleware('auth:web')->group(function () {
     Route::get('/admin/send-mail', Mail::class)->name('admin.mail.send');
     Route::get('/admin/view-recipients', ViewUsers::class)->name('admin.recipients.view');
     Route::get('/admin/view-new-recipients', ViewTickets::class)->name('admin.recipients.new');
-});
+});  
 
 // Subscription route
 Route::get('/recipient/subscribe/{email}', [SubscriptionController::class, 'index'])->name('recipient.subscribe');
-
-// Login route
-Route::post('/admin/login', [LoginController::class, 'login'])->name('admin.login.submit');
 
 // Logout route
 Route::get('/logout', function () {
@@ -45,5 +46,5 @@ Route::get('/logout', function () {
         }
     }
 
-    return redirect('/')->with('success', 'Logout successful');
+    return redirect('/login')->with('success', 'Logout successful');
 })->name('logout');

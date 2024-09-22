@@ -24,7 +24,7 @@
             </label>
  
             {{-- Brand --}}
-            <div >Kenya France Business Club MAILING SYSTEM</div>
+            <div >MAILING SYSTEM</div>
         </x-slot:brand>
  
         {{-- Right side actions --}}
